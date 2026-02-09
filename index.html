@@ -6,8 +6,10 @@
             <title>Lab3</title>
 
         <!--put your external stylesheet links here-->
-       <link rel='stylesheet' href='/libs/leaflet/leaflet.css'>
-        <link rel="stylesheet" href="css/style.css">
+       <link rel='stylesheet' href='libs/leaflet/leaflet.css'>
+       <style> 
+        #map {height: 650px;}
+       </style>
         <!--[if IE<9]>
             <link rel="stylesheet" href="css/style.ie.css">
         <![endif]-->
@@ -18,15 +20,21 @@
     </head>
 
     <body>
-        <h1>LAB 3 Chorpleth and Proportional Symbols Maps</h1>
+        <h1><center>LAB 3 Chorpleth and Proportional Symbols Maps</center></h1>
 
         <!--put your initial page content here-->
-
+        <div id='map'></div>
         <!--you can also use this space for internal scripts;
         place these within <script> tags-->
 
+    <svg id="Layer_1" width="180px" height="180px">
+        <circle fill="#F47821" fill-opacity="0.8" stroke="#000000" stroke-miterlimit="10" cx="90" cy="90.001" r="89.5"/>
+    </svg>
+
         <!--put your external script links here-->
-        <script type='text/javascript' src='/libs/leaflet/leaflet-src.js'></script>
-        <script type="text/javascript" src="js/main.js"></script>
+
+        <script src='libs/leaflet/leaflet-src.js'></script>
+
+        <script src='js/main.js'></script>
     </body>
 </html>
