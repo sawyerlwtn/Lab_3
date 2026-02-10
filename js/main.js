@@ -5,6 +5,27 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+//Create a title for the map YOOOOO
+function createTitle() {
+    var TitleControl = L.Control.extend({
+        options: {
+            position: 'topleft' // You can change this to 'topright' or 'topleft'
+        },
+
+        onAdd: function () {
+            var container = L.DomUtil.create('div', 'map-title-container');
+            
+            // Use single quotes for the string as requested
+            container.innerHTML = '<h1>Major City Populations in the USA</h1><p>Data Source: US Census Bureau</p>';
+            
+            return container;
+        }
+    });
+
+    map.addControl(new TitleControl());
+};
+
+
 // 1. Declare global variables at the top
 
 fetch('data/USA_Major_Cities/USA_Major_Cities.json')
@@ -35,6 +56,7 @@ fetch('data/USA_Major_Cities/USA_Major_Cities.json')
 
         // Create the legend after data is loaded
         createLegend(); 
+        createTitle();
     });
 
 function calcRadius(val) {

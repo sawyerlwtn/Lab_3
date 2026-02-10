@@ -28,4 +28,33 @@
 };
 #attribute-legend {
     margin-top: 10px;
+};
+/* Create a titel for the Map */
+.map-title-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border: 2px solid #760000;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    text-align: center;
 }
+
+.map-title-container h1 {
+    margin: 0;
+    font-size: 1.5em;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    
+    /* The Halo Effect */
+    color: #000000; /* Dark text color */
+    text-shadow: 
+        -1px -1px 0 #fff,  
+         1px -1px 0 #fff,
+        -1px  1px 0 #fff,
+         1px  1px 0 #fff; /* White halo */
+}
+
+.map-title-container p {
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+    color: #666;
+};
