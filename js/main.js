@@ -1,9 +1,100 @@
 var map = L.map('map').setView([41.2, -95.9], 5);
-
+var dataStats = {}; 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+// 1. Declare global variables at the top
+
+fetch('data/USA_Major_Cities/USA_Major_Cities.json')
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(USA_Major_Cities) {
+        // Calculate stats first so the legend knows the sizes
+        calcStats(USA_Major_Cities);
+        
+        L.geoJSON(USA_Major_Cities, {
+            pointToLayer: function (feature, latlng) {
+                var attValue = Number(feature.properties.POPULATION); 
+                return L.circleMarker(latlng, {
+                    radius: calcRadius(attValue), 
+                    fillColor: '#33fcff',
+                    color: '#760000',
+                    weight: 1,
+                    fillOpacity: 0.8
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                var popupContent = '<b>City:</b> ' + feature.properties.NAME + 
+                       '<br><b>Population:</b> ' + feature.properties.POPULATION.toLocaleString();
+                layer.bindPopup(popupContent);
+            }
+        }).addTo(map);
+
+        // Create the legend after data is loaded
+        createLegend(); 
+    });
+
+function calcRadius(val) {
+    var scaleFactor = 0.015; 
+    // This math ensures the 8M city fits while the 250k city stays visible
+    return (Math.sqrt(val) * scaleFactor) + 2; 
+}
+
+function calcStats(data) {
+    var allValues = [];
+    for (var city of data.features) {
+        var value = city.properties.POPULATION;
+        if (value) allValues.push(Number(value));
+    }
+    dataStats.min = Math.min(...allValues);
+    dataStats.max = Math.max(...allValues);
+    dataStats.mean = allValues.reduce((a, b) => a + b) / allValues.length;
+}
+
+function createLegend() {
+    var LegendControl = L.Control.extend({
+        options: { position: 'bottomright' },
+      onAdd: function () {
+            var container = L.DomUtil.create('div', 'legend-control-container');
+            container.innerHTML = '<b>City Population</b>';
+
+            // We keep the height at 160px
+            var svg = '<svg id="attribute-legend" width="180px" height="160px">';
+            
+            var circleValues = [8000000, 1000000, 250000];
+
+            for (var i = 0; i < circleValues.length; i++) {
+                var radius = calcRadius(circleValues[i]);
+                
+                // 1. Lower the 'floor' to 150 so circles sit at the very bottom
+                var cy = 150 - radius; 
+
+                svg += '<circle class="legend-circle" fill="#33fcff" fill-opacity="0.6" stroke="#760000" cx="45" cy="' + cy + '" r="' + radius + '"/>';
+                
+                // 2. Adjust Lift: 
+                // We use -20 instead of -30 to keep the 8M label inside the box
+                var verticalLift = (2 - i) * -20; 
+                var textY = (cy - radius) + verticalLift;
+
+                var labelValue = (circleValues[i] >= 1000000) ? 
+                                 (circleValues[i] / 1000000).toFixed(1) + 'M' : 
+                                 (circleValues[i] / 1000).toFixed(0) + 'k';
+                
+                svg += '<text x="120" y="' + (textY + 5) + '" style="font-size: 13px; font-weight: bold;">' + labelValue + '</text>';
+                
+                svg += '<line x1="45" y1="' + (cy - radius) + '" x2="115" y2="' + textY + '" stroke="gray" stroke-dasharray="2,2" />';
+            }
+
+            svg += '</svg>';
+            container.insertAdjacentHTML('beforeend', svg);
+            return container;
+        }
+    });
+    map.addControl(new LegendControl());
+}
 //The following code creates multiple pop ups / polygons / pins on the map
 // var marker = L.marker([51.5, -0.09]).addTo(map);
 // // Polygon
@@ -39,66 +130,3 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // map.on('click', onMapClick);
 
-// This tells the browser to go find the file in your project folder
-fetch('data/USA_Major_Cities/USA_Major_Cities.json')
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(USA_Major_Cities) {
-        // EVERYTHING using the data must happen inside these curly braces
-        
-        L.geoJSON(USA_Major_Cities, {
-            pointToLayer: function (feature, latlng) {
-                // Ensure 'POPULATION' matches the exact case in your JSON
-                var attValue = Number(feature.properties.POPULATION); 
-                
-                return L.circleMarker(latlng, {
-                    radius: calcRadius(attValue), 
-                    fillColor: '#33fcff',
-                    color: '#760000',
-                    weight: 1,
-                    fillOpacity: 0.8
-                });
-            },
-            onEachFeature: function (feature, layer) {
-                // Ensure 'NAME' or 'CITY' matches your JSON exactly
-                var popupContent = '<b>City:</b> ' + feature.properties.NAME + 
-                       '<br><b>Population:</b> ' + feature.properties.POPULATION.toLocaleString();
-                       layer.bindPopup(popupContent);
-            }
-        }).addTo(map);
-    });
-
-// Keep this function outside at the bottom
-function calcRadius(val) {
-    var scaleFactor = 0.02;
-    return Math.sqrt(val) * scaleFactor;
-};
-
-//create a legend for the map
-//Example 2.7 line 1...function to create the legend
-function createLegend(attributes){
-    var LegendControl = L.Control.extend({
-        options: {
-            position: 'bottomright'
-        },
-
-        onAdd: function () {
-            // create the control container with a particular class name
-            var container = L.DomUtil.create('div', 'legend-control-container');
-
-            container.innerHTML = '<p class="temporalLegend">Population in <span class="year">1985</span></p>';
-
-            //Step 1: start attribute legend svg string
-            var svg = '<svg id="attribute-legend" width="130px" height="130px">';
-
-            //add attribute legend svg to container
-            container.innerHTML += svg;
-
-            return container;
-        }
-    });
-
-    map.addControl(new LegendControl());
-
-};

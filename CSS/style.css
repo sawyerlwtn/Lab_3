@@ -1,1 +1,31 @@
-#practice_map {height: 180px;}
+/* #practice_map {height: 180px;} */
+/* This makes the legend look like a 'box' on the map */
+/* .legend-control-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    line-height: 1.5;
+}
+
+.temporalLegend {
+    font-weight: bold;
+    margin: 0;
+}; */
+
+.legend-control-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border: 1px solid #760000;
+    border-radius: 8px;
+    /* Increase width to accommodate staggered labels */
+    min-width: 170px; 
+    /* Ensure the box doesn't cut off the SVG overflow */
+    overflow: visible; 
+}
+.legend-circle {
+    transition: fill 0.3s; /* Optional: makes them glow on hover */
+};
+#attribute-legend {
+    margin-top: 10px;
+}
