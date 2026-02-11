@@ -13,29 +13,57 @@
     margin: 0;
 }; */
 
+/* 1. Centering Logic for the entire page */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4; /* Optional: light grey background */
+}
+
+/* 2. Your original Map Styles (now centered via the body flex) */
+#map {
+    width: 1000px;
+    height: 650px;
+    display: block;
+    border: 2px solid #760000;
+    margin-bottom: 20px;
+}
+
+#map2 {
+    width: 1000px;
+    height: 650px;
+    display: block;
+    border: 2px solid #760000;
+}
+
+/* 3. The Legend Container */
 .legend-control-container {
     background: rgba(255, 255, 255, 0.9);
     padding: 15px;
     border: 1px solid #760000;
     border-radius: 8px;
-    /* Increase width to accommodate staggered labels */
     min-width: 170px; 
-    /* Ensure the box doesn't cut off the SVG overflow */
     overflow: visible; 
 }
+
 .legend-circle {
-    transition: fill 0.3s; /* Optional: makes them glow on hover */
-};
+    transition: fill 0.3s; 
+}
+
 #attribute-legend {
     margin-top: 10px;
-};
-/* Create a titel for the Map */
+}
+
+/* 4. The Map Title */
 .map-title-container {
     background-color: rgba(255, 255, 255, 0.9);
     padding: 10px 20px;
     border: 2px solid #760000;
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
@@ -43,18 +71,23 @@
     margin: 0;
     font-size: 1.5em;
     font-family: 'Helvetica', 'Arial', sans-serif;
-    
-    /* The Halo Effect */
-    color: #000000; /* Dark text color */
+    color: #000000; 
     text-shadow: 
         -1px -1px 0 #fff,  
          1px -1px 0 #fff,
         -1px  1px 0 #fff,
-         1px  1px 0 #fff; /* White halo */
+         1px  1px 0 #fff; 
 }
 
 .map-title-container p {
     margin: 5px 0 0 0;
     font-size: 0.9em;
     color: #666;
-};
+}
+
+/* 5. The separator line */
+hr {
+    width: 1000px;
+    margin: 40px 0;
+    border: 1px solid #c90000;
+}
